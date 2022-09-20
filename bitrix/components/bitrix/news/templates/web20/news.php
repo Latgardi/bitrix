@@ -131,6 +131,7 @@ $this->setFrameMode(true);
 		"VOTE_NAMES" => $arParams["VOTE_NAMES"],
 		"SPECIAL_DATE" => $arParams["SPECIAL_DATE"],
 		"CHECK_DATES" => $arParams["CHECK_DATES"],
-	),
+        "CANONICAL" => $arParams["CANONICAL"],
+    ),
 	$component
 );?>

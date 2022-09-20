@@ -1,0 +1,6 @@
+<?
+$sSectionName = "Canonical";
+$arDirProperties = Array(
+
+);
+?>

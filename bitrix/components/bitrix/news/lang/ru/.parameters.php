@@ -86,4 +86,5 @@ $MESS["CP_BN_RATING"] = "Рейтинг";
 $MESS["CP_BN_STRICT_SECTION_CHECK"] = "Строгая проверка раздела";
 $MESS["CP_BN_DETAIL_STRICT_SECTION_CHECK"] = "Строгая проверка раздела для детального показа элемента";
 $MESS["SPECIAL_DATE"] = "Установить свойство страницы specialdate";
+$MESS["CANONICAL"] = "ID информационного блока для rel=canonical";
 ?>

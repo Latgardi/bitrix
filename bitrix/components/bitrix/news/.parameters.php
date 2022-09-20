@@ -140,6 +140,12 @@ $arComponentParameters = array(
 			"TYPE" => "CHECKBOX",
 			"DEFAULT" => "N",
 		),
+		"CANONICAL" => array(
+			"PARENT" => "BASE",
+			"NAME" => GetMessage("CANONICAL"),
+			"TYPE" => "STRING",
+			"DEFAULT" => "",
+		),
 		"USE_RSS" => array(
 			"PARENT" => "RSS_SETTINGS",
 			"NAME" => GetMessage("T_IBLOCK_DESC_USE_RSS"),

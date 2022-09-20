@@ -1,4 +1,5 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?
+if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -12,6 +13,22 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 ?>
+<?
+if ($arParams["CANONICAL"]) {
+	$arSelect = Array("ID", "NAME", "PROPERTY_9_VALUE");
+	$arFilter = Array("IBLOCK_ID"=>$arParams["CANONICAL"], "PROPERTY_9_VALUE" => $arParams["ELEMENT_ID"]);
+	$result = CIBlockElement::GetList(Array(), $arFilter, false, Array(), $arSelect);
+	while($ob = $result->GetNextElement())
+	{
+		$arFields = $ob->GetFields();
+	}
+    $elementName = $arFields["NAME"];
+	$template = "<link rel=\"canonical\" href=\"$elementName\">";
+	if (isset($elementName)) {
+        $APPLICATION->setPageProperty("canonical", $template);
+    }
+}?>
+
 <div class="news-detail">
 	<?if($arParams["DISPLAY_PICTURE"]!="N" && is_array($arResult["DETAIL_PICTURE"])):?>
 		<img
