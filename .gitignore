@@ -1,0 +1,11 @@
+/upload/
+        
+/bitrix/*              
+!/bitrix/templates
+!/bitrix/php_interface
+!/bitrix/components
+/bitrix/components/*
+!/bitrix/components/bitrix
+/bitrix/components/bitrix/*
+!/bitrix/components/bitrix/news
+
