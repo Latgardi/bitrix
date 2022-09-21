@@ -8,6 +8,8 @@ IncludeTemplateLangFile(__FILE__);
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta property="specialdate" content="<?$APPLICATION->ShowProperty("specialdate", "100")?>">">
 <?$APPLICATION->ShowProperty("canonical");?>
+<?$APPLICATION->ShowMeta("title")?>
+<?$APPLICATION->ShowMeta("description")?>
 <?$APPLICATION->ShowHead();?>
 <link href="<?=SITE_TEMPLATE_PATH?>/common.css" type="text/css" rel="stylesheet" />
 <link href="<?=SITE_TEMPLATE_PATH?>/colors.css" type="text/css" rel="stylesheet" />

@@ -7,6 +7,7 @@ AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", Array("EventHandlers", 
 AddEventHandler("main", "OnEpilog", Array("EventHandlers", "writeLog404"));
 AddEventHandler("main", "OnBeforeEventAdd", Array("EventHandlers", "feedbackFormChangeAuthor"));
 AddEventHandler('main', 'OnBuildGlobalMenu', Array("EventHandlers", "simplifiedGlobalMenu"));
+AddEventHandler("main", "OnEpilog", Array("EventHandlers", "setMeta"));
 
 class EventHandlers
 {
@@ -60,7 +61,7 @@ class EventHandlers
 	}
 
 
-	function simplifiedGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
+	public function simplifiedGlobalMenu(array &$aGlobalMenu, array &$aModuleMenu): void
 	{
 		global $USER;
 		$userID = $USER->GetID();
@@ -83,6 +84,23 @@ class EventHandlers
 				}
 				unset($aModuleMenu[$key]);
 			}
+		}
+	}
+	public function setMeta(): void
+	{
+		global $APPLICATION;
+		$page = $APPLICATION->GetCurPage();
+		$iterator = \CIBlockElement::GetList(
+			array(),
+			array("NAME" => $page, "IBLOCK_ID" => 6),
+			false,
+			false,
+			array("ID", "PROPERTY_10", "PROPERTY_11")
+		);
+
+		while ($data = $iterator->GetNext()) {
+			$APPLICATION->SetPageProperty("title", $data["PROPERTY_10_VALUE"]);
+			$APPLICATION->SetPageProperty("description", $data["PROPERTY_11_VALUE"]);
 		}
 	}
 }
