@@ -86,6 +86,7 @@ class EventHandlers
 			}
 		}
 	}
+
 	public function setMeta(): void
 	{
 		global $APPLICATION;
