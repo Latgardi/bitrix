@@ -2,7 +2,7 @@
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Простой компонент");
 ?><?$APPLICATION->IncludeComponent(
-	"ex2:simplecomp.exam",
+	"ex2:siplecomp.exam_70",
 	"",
 	Array(
 		"CACHE_TIME" => "36000000",
