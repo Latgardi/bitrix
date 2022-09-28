@@ -1,12 +1,20 @@
 <?php
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 
+use Bitrix\Main\Context;
+
 class SimpleComp extends  CBitrixComponent
 {
+	private bool $extParam = false;
 	private array $arNews;
 	private array $arNewsID;
 	private array $arSections;
 	private array $arSectionsID;
+	private array $arExtFilter = array(
+		"LOGIC" => "OR",
+		array("<=PROPERTY_PRICE" => 1700, "=PROPERTY_MATERIAL" => "Дерево, ткань"),
+		array("<PROPERTY_PRICE" => 1500, "=PROPERTY_MATERIAL" => "Металл, пластик"),
+	);
 
 	public function onPrepareComponentParams($arParams): array
 	{
@@ -27,9 +35,24 @@ class SimpleComp extends  CBitrixComponent
 	{
 		global $APPLICATION;
 
-		$this->getResult();
+		if ($this->extParam) {
+			$this->getResult();
+		} else {
+			if ($this->startResultCache($this->arParams["CACHE_TIME"])) {
+				$this->getResult();
+			}
+		}
 		$APPLICATION->SetTitle(GetMessage("SIMPLECOMP_EXAM2_TITLE") . $this->arResult["PRODUCT_CNT"]);
 		$this->includeComponentTemplate();
+	}
+
+	private  function checkExtParam(): void
+	{
+		$request = Context::getCurrent()->getRequest();
+		$extParam = $request->getQuery("F");
+		$this->extParam = isset($extParam);
+
+		$this->arResult["TEST_URI"] = $request->getRequestedPage() . "?F=Y";
 	}
 
 	private function getNews(): void
@@ -79,13 +102,16 @@ class SimpleComp extends  CBitrixComponent
 
 	private function linkProducts(): void
 	{
+		$arFilter = array(
+			"ACTIVE" => "Y",
+			"IBLOCK_ID" => $this->arParams["PRODUCTS_IBLOCK_ID"],
+		);
+		if ($this->extParam) {
+			$arFilter[] = $this->arExtFilter;
+		}
 		$obProducts = CIBlockElement::GetList(
 			array(),
-			array(
-				"IBLOCK_ID" => $this->arParams["PRODUCTS_IBLOCK_ID"],
-				"ACTIVE" => "Y",
-				//"SECTION_ID" => $arSectionsID
-			),
+			$arFilter,
 			false,
 			false,
 			array(
@@ -126,13 +152,12 @@ class SimpleComp extends  CBitrixComponent
 
 	private function getResult(): void
 	{
-		if ($this->startResultCache($this->arParams["CACHE_TIME"])) {
-			$this->getNews();
-			$this->getSections();
-			$this->linkProducts();
-			$this->getCount();
-			$this->getSectionNames();
-			$this->arResult["NEWS"] = $this->arNews;
-		}
+		$this->checkExtParam();
+		$this->getNews();
+		$this->getSections();
+		$this->linkProducts();
+		$this->getCount();
+		$this->getSectionNames();
+		$this->arResult["NEWS"] = $this->arNews;
 	}
 }
