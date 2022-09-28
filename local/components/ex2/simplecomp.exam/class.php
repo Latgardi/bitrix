@@ -7,6 +7,7 @@ class SimpleComp extends  CBitrixComponent
 	private array $arNewsID;
 	private array $arSections;
 	private array $arSectionsID;
+	private array $arPrices;
 
 	public function onPrepareComponentParams($arParams): array
 	{
@@ -29,6 +30,7 @@ class SimpleComp extends  CBitrixComponent
 
 		$this->getResult();
 		$APPLICATION->SetTitle(GetMessage("SIMPLECOMP_EXAM2_TITLE") . $this->arResult["PRODUCT_CNT"]);
+		$this->setPricesView();
 		$this->includeComponentTemplate();
 	}
 
@@ -100,6 +102,7 @@ class SimpleComp extends  CBitrixComponent
 		);
 
 		while ($row = $obProducts->GetNext()) {
+			$this->arPrices[] = $row["PROPERTY_PRICE_VALUE"];
 			foreach ($this->arSections[$row["IBLOCK_SECTION_ID"]][$this->arParams["PRODUCTS_IBLOCK_PROPERTY"]] as $newsID) {
 				$this->arNews[$newsID]["PRODUCTS"][] = $row;
 			}
@@ -122,6 +125,21 @@ class SimpleComp extends  CBitrixComponent
 				$this->arNews[$newsID]["SECTIONS"][] = $section["NAME"];
 			}
 		}
+	}
+
+	private function setPricesView(): void
+	{
+		global $APPLICATION;
+
+		$minPrice = min($this->arPrices);
+		$maxPrice = max($this->arPrices);
+		$text = GetMessage("SIMPLECOMP_EXAM2_MIN_PRICE") . $minPrice . ", " .
+			GetMessage("SIMPLECOMP_EXAM2_MAX_PRICE") . $maxPrice;
+		$view = "<div style=\"color:red; margin: 34px 15px 35px 15px\">$text</div>";
+		ob_start();
+		echo $view;
+		$output = ob_get_clean();
+		$APPLICATION->AddViewContent("prices", $output);
 	}
 
 	private function getResult(): void
