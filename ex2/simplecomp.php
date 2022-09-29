@@ -2,13 +2,15 @@
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Простой компонент");
 ?><?$APPLICATION->IncludeComponent(
-	"ex2:siplecomp.exam_70",
+	"ex2:simplecomp.exam_71",
 	"",
 	Array(
 		"CACHE_TIME" => "36000000",
 		"CACHE_TYPE" => "A",
-		"NEWS_IBLOCK_ID" => "1",
+		"DETAIL_LINK_TEMPLATE" => "детальный просмотр",
+		"FIRMS_IBLOCK_ID" => "7",
+		"PAGE_SIZE" => "5",
 		"PRODUCTS_IBLOCK_ID" => "2",
-		"PRODUCTS_IBLOCK_PROPERTY" => "UF_NEWS_LINK"
+		"PRODUCT_PROPERTY" => "FIRM"
 	)
 );?><br><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

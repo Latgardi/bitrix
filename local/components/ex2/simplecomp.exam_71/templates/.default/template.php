@@ -21,4 +21,16 @@
             <? endif;
         endforeach;?>
     </ul>
+
 <? endif; ?>
+<?
+$APPLICATION->IncludeComponent(
+	"bitrix:main.pagenavigation",
+	"",
+	array(
+		"NAV_OBJECT" => $this->nav,
+		"SEF_MODE" => "Y",
+	),
+	false
+);
+?>

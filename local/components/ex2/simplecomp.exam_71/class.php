@@ -6,6 +6,7 @@ class SimpleComp extends  CBitrixComponent
 	private const DETAIL_LINK_TEMPLATE = "детальный просмотр";
 	private array $arFirms;
 	private array $arFirmsID;
+	public object $nav;
 
 	public function onPrepareComponentParams($arParams): array
 	{
@@ -24,12 +25,16 @@ class SimpleComp extends  CBitrixComponent
 		if (!isset($arParams["PRODUCT_PROPERTY"])) {
 			$arParams["PRODUCT_PROPERTY"] = "FIRM";
 		}
+		if (!isset($arParams["PAGE_SIZE"])) {
+			$arParams["PAGE_SIZE"] = 2;
+		}
 
 		return $arParams;
 	}
 
 	public function executeComponent()
 	{
+		\Bitrix\Main\Loader::includeModule('iblock');
 		global $APPLICATION;
 
 		$this->getResult();
@@ -39,26 +44,33 @@ class SimpleComp extends  CBitrixComponent
 
 	private function getFirms(): void
 	{
-		$obFirms = CIBlockElement::GetList(
-			array(),
-			array(
-				"IBLOCK_ID" => $this->arParams["FIRMS_IBLOCK_ID"],
-			),
-			false,
-			false,
-			array(
-				"NAME",
-				"ID",
-			)
-		);
-		while ($row = $obFirms->GetNext()) {
+		global $APPLICATION;
+		$result = \Bitrix\Iblock\ElementTable::getList(
+		array(
+			"select" => ["NAME", "ID"],
+			"filter" => array("=IBLOCK_ID"=>7),
+			"count_total" => true,
+		));
+
+		$this->nav = new \Bitrix\Main\UI\PageNavigation("nav-more-firms");
+		$this->nav->allowAllRecords(true)
+			->setPageSize($this->arParams["PAGE_SIZE"])
+			->initFromUri();
+		$this->nav->setRecordCount($result->getCount());
+		print_r($this->nav);
+		while ($row = $result->fetch()) {
 			$this->arFirmsID[] = $row["ID"];
 			$this->arFirms[$row["ID"]] = $row;
 		}
+
+
+
+
 	}
 
 	private function linkProducts(): void
 	{
+		global $APPLICATION;
 			$obProducts = CIBlockElement::GetList(
 				array(),
 				array(
@@ -66,7 +78,9 @@ class SimpleComp extends  CBitrixComponent
 					"PROPERTY_" . $this->arParams["PRODUCT_PROPERTY"] => $this->arFirmsID,
 				),
 				false,
-				false,
+				array(
+					"nPageSize" => $this->arParams["PAGE_SIZE"],
+				),
 				array(
 					"NAME",
 					"IBLOCK_ID",
